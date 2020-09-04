@@ -1,75 +1,73 @@
 <template>
-  <div class="menu" id="menu">
-    <!-- 用户信息 -->
-    <user-info></user-info>
+  <div id="menu" :class="isSmall && showMenu ? 'show' : (!isSmall && closeStatus ? 'hide': (isSmall && closeStatus ? 'hide' : ''))">
+    <div class="inner flex-row-vertical">
+      <!-- 删除按钮-->
+      <div class="header-icon waves-effect waves-circle waves-light" id="menu-off" @click="handleHide">
+        <i class="icon icon-lg icon-close"></i>
+      </div>
 
-    <!-- 菜单 -->
-    <div class="scroll-wrap flex-col">
-      <ul class="nav">
-        <li 
-          v-for="item in navList"
-          :key="item.id"
-          class="waves-block waves-effect"
-          :class="activeMenu == item.urlName ? 'active' : ''"
-        >
-          <span @click="toPath(item.urlName)">
-            <i class="icon icon-lg" :class="`icon-${item.icon}`"></i>
-            {{item.name}}
-          </span>
-        </li>
-      </ul>
+      <!-- 用户信息 -->
+      <user-info></user-info>
+
+      <!-- 菜单 -->
+      <div class="scroll-wrap flex-col">
+        <ul class="nav">
+          <li 
+            v-for="item in navList"
+            :key="item.id"
+            class="waves-block waves-effect"
+            :class="activeMenu == item.urlName ? 'active' : ''"
+          >
+            <span @click="toPath(item.urlName)">
+              <i class="icon icon-lg" :class="`icon-${item.icon}`"></i>
+              {{item.name}}
+            </span>
+          </li>
+        </ul>
+      </div>
     </div>
   </div>
 </template>
 
 <script lang="ts">
-import { Component, Vue, Watch } from "vue-property-decorator";
+import { navList } from '@/configs/navList'
+import { Component, Vue, Watch, Prop, Emit } from "vue-property-decorator";
 import userInfo from "@/components/userInfo/index.vue";
+import headerNav from "@/components/header/index.vue";
 
 @Component({
   components: {
-    userInfo
+    userInfo,
+    headerNav
   }
 })
 
 export default class ClassName extends Vue {
-	private navList: Array<Object> = [{
-    id: 1,
-    name: 'Home',
-    icon: 'home',
-    urlName: 'home'
-  }, {
-    id: 2,
-    name: 'Archives',
-    icon: 'archives',
-    urlName: 'archives'
-  }, {
-    id: 3,
-    name: 'Tags',
-    icon: 'tags',
-    urlName: 'tags'
-  }, {
-    id: 4,
-    name: 'Github',
-    icon: 'github',
-    urlName: 'github'
-  }, {
-    id: 5,
-    name: 'Weibo',
-    icon: 'weibo',
-    urlName: 'weibo'
-  }];
-  private activeMenu: string = 'Home';
+	private navList: Array<Object> = navList;  // 菜单列表
+  private activeMenu: string = 'Home';  // 菜单高亮
+
+
+  @Prop() private showMenu!:boolean;
+  @Prop() private isSmall!:boolean;
+  @Prop() private closeStatus!:boolean;
+  
+  @Emit("hideMenu") hideMenu(bool:boolean){};
+  @Emit("showMenu") showMenuFun(bool:boolean){};
 
   @Watch("$route")
-  routeChange(val: any, oldVale: any) {
+  routeChange(val: any, oldVal: any) {
     if (val.name == this.activeMenu) return; 
     this.activeMenu = val.name;
-    // console.log(val)
   }
 
-  mounted(): void {
-    // console.log(this.$route)
+  // 隐藏菜单
+  private handleHide() {
+    this.hideMenu(false);
+  }
+
+  // 显示菜单
+  private handleShow(){
+    this.showMenuFun(true)
   }
 
 

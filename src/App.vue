@@ -1,21 +1,83 @@
 <template>
   <div id="app">
-    <menu-bar></menu-bar>
+    <menu-bar 
+      :showMenu="showMenu"
+      :isSmall="isSmall"
+      :closeStatus="closeStatus"
+      @hideMenu="handleHideMenu"
+      @showMenuFun="handleShowMenu"
+    >
+    </menu-bar>
 
-    <router-view id="main"/>
+    <div id="main">
+      <header-nav
+        @bindShowMenu="handleShowMenu"
+      >
+      </header-nav>
+
+      <router-view />
+
+    </div>
+    <div class="mask" id="mask" :class="showMenu && isSmall ? 'in' : ''" @click="handleHideMenu(false)"></div>
   </div>
 </template>
 
 <script lang="ts">
-import { Component, Vue } from "vue-property-decorator";
+import { Component, Vue, Watch } from "vue-property-decorator";
 import menuBar from "@/components/menuBar/index.vue";
+import headerNav from "@/components/header/index.vue"
 
 @Component({
   components: {
-    menuBar
+    menuBar,
+    headerNav
   }
 })
-export default class ClassName extends Vue {}
+export default class ClassName extends Vue {
+
+  @Watch("screenWidth")
+  widthChange(val:number, oldVal:number) {
+    this.handleWidth(val, true)
+  }
+
+  private showMenu:boolean = true;
+  private screenWidth:any = '';   // 窗口宽度
+  private isSmall:boolean = false;  // 是否小屏
+  private closeStatus:boolean = false;  // 是否关闭
+
+  mounted(): void {
+    window.onresize = () => {
+      return (() => {
+        this.screenWidth = window.innerWidth;
+      })()
+    }
+    this.handleWidth(window.innerWidth);
+  }
+
+  handleShowMenu(bool:boolean) {
+    if (this.screenWidth > 1240) {
+      this.closeStatus = false;
+    } 
+    this.showMenu = bool; // true
+  }
+
+  handleHideMenu(bool:boolean) {
+    if (this.screenWidth > 1240) {
+      this.closeStatus = true;
+    }
+    this.showMenu = bool;  // false
+  }
+
+  handleWidth(width:number, watch?:boolean): void {
+    this.screenWidth = width;
+    if (this.screenWidth <= 1240) {
+      if(watch) this.showMenu = false;
+      this.isSmall = true;
+    } else {
+      this.isSmall = false;
+    }
+  }
+}
 </script>
 
 <style lang="less">
