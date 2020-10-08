@@ -1,2 +1,2 @@
-# my-blod
-my-blod
+# my-blog
+my-blog
