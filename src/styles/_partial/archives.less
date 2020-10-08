@@ -44,12 +44,15 @@
     }
 }
 .waterfall {
-    position: relative;
+    // position: relative;
+    display: flex;
+    align-items: center;
+    flex-direction: row;
     margin: 0 -10px -20px;
     .fade;
 }
 .waterfall-item {
-    position: absolute;
+    // position: absolute;
     width: 50%;
     padding: 0 10px 20px;
 }
@@ -76,6 +79,7 @@
     }
 
     .waterfall {
+        flex-direction: column;
         margin: 0;
         height: auto!important;
         opacity: 1;
@@ -83,7 +87,7 @@
     }
 
     .waterfall-item {
-        position: static;
+        // position: static;
         width: 100%;
         padding: 0;
     }

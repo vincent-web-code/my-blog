@@ -1,13 +1,13 @@
 <template>
 	<div>
-		<div class="top-header" id="header">
+		<div class="top-header" :class="scrollTop > 0 ? 'fixed' : ''" id="header">
 			<div class="flex-row">
 
 				<div class="header-icon waves-effect waves-circle waves-light on" @click="handleShowMenu">
 					<i class="icon icon-lg icon-navicon"></i>
 				</div>
 				
-				<div class="flex-col header-title ellipsis"></div>
+				<div class="flex-col header-title ellipsis">{{title.name}}</div>
 
 				<div class="search-wrap" :class="showInput ? 'in' : ''" id="search-wrap">
 					<input id="key" class="search-input" autocomplete="off" placeholder="输入感兴趣的关键字">
@@ -24,8 +24,8 @@
 
 		<div class="content-header index-header">
 			<div class="container fade-scale in">
-				<h1 class="title">Yusen's Blog</h1>
-				<h5 class="subtitle">学习弯道超车的技巧！</h5>
+				<h1 class="title">{{title.name}}</h1>
+				<h5 class="subtitle">{{title.subscribe}}</h5>
 			</div>
 		</div>
 	</div>
@@ -34,16 +34,43 @@
 
 
 <script lang="ts">
-import { Component, Vue, Emit } from "vue-property-decorator";
+import { Component, Vue, Emit, Watch } from "vue-property-decorator";
 
 @Component
 export default class ClassName extends Vue {
 	private showInput:boolean = false;
-
+	private title:object = {};
+	private scrollTop:number = 0;
+	
+	@Watch("$route") 
+	routeChange(val: any, oldVal: any) {
+		if (val.name == 'home') {
+			this.title = {
+				name: "Vincent's Blog",
+				subscribe: "学习弯道超车的技巧！"
+			}
+		} else if (val.name == 'archives') {
+			this.title = {
+				name: "Archives"
+			}
+		} else if (val.name == 'tags') {
+			this.title = {
+				name: "Tags"
+			}
+		}
+	}
 	@Emit("bindShowMenu") showMenuFun(isShow:boolean){};
+
+	mounted() {
+		window.addEventListener('scroll', this.watchScroll)
+	}
 
 	private handleShowMenu() {
 		this.showMenuFun(true)
+	}
+
+	private watchScroll() {
+		this.scrollTop = document.documentElement.scrollTop || document.body.scrollTop;
 	}
 }
 </script>

@@ -19,6 +19,16 @@
 
     </div>
     <div class="mask" id="mask" :class="showMenu && isSmall ? 'in' : ''" @click="handleHideMenu(false)"></div>
+
+    <!-- 返回顶部按钮 -->
+    <a 
+      class="waves-effect waves-circle waves-light" 
+      :class="scrollTop > 300 ? 'in' : ''"
+      id="gotop"
+      href="#main"
+    >
+      <span class="icon icon-lg icon-chevron-up"></span>
+    </a>
   </div>
 </template>
 
@@ -44,6 +54,7 @@ export default class ClassName extends Vue {
   private screenWidth:any = '';   // 窗口宽度
   private isSmall:boolean = false;  // 是否小屏
   private closeStatus:boolean = false;  // 是否关闭
+  private scrollTop:number = 0;  // 滚动距离顶部的位置
 
   mounted(): void {
     window.onresize = () => {
@@ -52,6 +63,7 @@ export default class ClassName extends Vue {
       })()
     }
     this.handleWidth(window.innerWidth);
+    window.addEventListener('scroll', this.watchScroll)
   }
 
   handleShowMenu(bool:boolean) {
@@ -76,6 +88,16 @@ export default class ClassName extends Vue {
     } else {
       this.isSmall = false;
     }
+  }
+
+  // 监听用户滑动
+  watchScroll() {
+    this.scrollTop = document.documentElement.scrollTop || document.body.scrollTop;
+  }
+
+  // 返回顶部
+  goTop() {
+
   }
 }
 </script>
