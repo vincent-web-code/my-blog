@@ -30,7 +30,7 @@
 </template>
 
 <script lang="ts">
-import { navList } from '@/configs/navList'
+import { navList } from '../../configs/navList'
 import { Component, Vue, Watch, Prop, Emit } from "vue-property-decorator";
 import userInfo from "@/components/userInfo/index.vue";
 import headerNav from "@/components/header/index.vue";

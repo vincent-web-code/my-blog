@@ -18,6 +18,11 @@ const routes: Array<RouteConfig> = [
     path: "/tags",
     name: "tags",
     component: () => import("@/views/tags/index.vue")
+  },
+  {
+    path: "/articles",
+    name: "articles",
+    component: () => import("@/views/article/index.vue"),
   }
 ];
 
