@@ -65,7 +65,6 @@ export default class archives extends Vue{
 
 
 <style lang="less" scoped>
-@import "../../styles/_partial/archives";
 .post-footer {
     position: relative;
     border-top: 1px solid #ddd;

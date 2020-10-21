@@ -9,15 +9,14 @@
           </div>
 
           <!-- 标题 -->
-          <h3 class="post-title" @click="toArticle(art._id)">
+          <h3 class="post-title" @click="toArticle(art._id, art.title)">
             <div class="post-title-link" >{{art.title}}</div>
           </h3>
 
           <!-- 内容 -->
           <div class="post-content">
-            <span v-if="art.desc">{{art.desc}}</span>
-            <span v-else v-html="filterValue(art.content)"></span>
-            <span class="post-more waves-effect waves-button">阅读全文...</span>
+            <span  v-html="filterValue(art.content)"></span>
+            <span class="post-more waves-effect waves-button" @click="toArticle(art._id, art.title)">阅读全文...</span>
           </div>
 
           <!-- 标签 -->
@@ -67,10 +66,10 @@ export default class name extends Vue {
     this.pagination.total = total;
   };
 
-  private toArticle(id: string): void {
+  private toArticle(id: string, title: string): void {
     this.$router.push({
       name: 'articles',
-      query: { id } 
+      query: { id }
     })
   };
 
@@ -90,7 +89,7 @@ export default class name extends Vue {
 </script>
 
 <style lang="less" scoped>
-@import "../../styles/_partial/article";
+// @import "../../styles/_partial/article";
 .post-content {
   padding-bottom: 20px;
   line-height: 1.8;

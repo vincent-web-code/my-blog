@@ -394,6 +394,18 @@ hr,
             flex: 0 auto;
 }
 
+.post-content blockquote p:first-child, .post-content blockquote:first-child, .post-content ol:first-child, .post-content p:first-child, .post-content pre:first-child, .post-content table:first-child, .post-content ul:first-child, .post-content figure:first-child {
+    margin-top: 0
+}
+
+.post-content h1, .post-content h2, .post-content h3, .post-content h4, .post-content blockquote, .post-content ol, .post-content p, .post-content pre, .post-content table, .post-content ul, .post-content figure, .post-content .video-container {
+    margin-bottom: 20px;
+}
+
+.post-content h1, .post-content h2, .post-content h3, .post-content h4, .post-content h5, .post-content h6 {
+    color: #3f51b5;
+}
+
 @import "_partial/loading";
 @import "_partial/waves";
 @import "_partial/layout";
@@ -402,8 +414,8 @@ hr,
 @import "_partial/postlist";
 @import "_partial/gotop";
 @import "_partial/share";
-// @import "_partial/article";
-
+@import "_partial/article";
+@import "_partial/archives";
 @import "_partial/page";
 @import "_partial/tags";
 @import "_partial/search";

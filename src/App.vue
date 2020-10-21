@@ -11,11 +11,12 @@
 
     <div id="main">
       <header-nav
+        :articleTitle="title"
         @bindShowMenu="handleShowMenu"
       >
       </header-nav>
 
-      <router-view />
+      <router-view @getTitle="getTitle" @hideMenu="handleHideMenu"></router-view>
 
     </div>
     <div class="mask" id="mask" :class="showMenu && isSmall ? 'in' : ''" @click="handleHideMenu(false)"></div>
@@ -33,7 +34,7 @@
 </template>
 
 <script lang="ts">
-import { Component, Vue, Watch } from "vue-property-decorator";
+import { Component, Vue, Watch, Emit } from "vue-property-decorator";
 import menuBar from "@/components/menuBar/index.vue";
 import headerNav from "@/components/header/index.vue"
 
@@ -55,6 +56,7 @@ export default class ClassName extends Vue {
   private isSmall:boolean = false;  // 是否小屏
   private closeStatus:boolean = false;  // 是否关闭
   private scrollTop:number = 0;  // 滚动距离顶部的位置
+  private title:string = '';
 
   mounted(): void {
     window.onresize = () => {
@@ -93,6 +95,10 @@ export default class ClassName extends Vue {
   // 监听用户滑动
   watchScroll() {
     this.scrollTop = document.documentElement.scrollTop || document.body.scrollTop;
+  }
+
+  getTitle(val:string) {
+    this.title = val;
   }
 
   // 返回顶部

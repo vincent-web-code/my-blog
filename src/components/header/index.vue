@@ -24,7 +24,7 @@
 
 		<div class="content-header index-header">
 			<div class="container fade-scale in">
-				<h1 class="title">{{title.name}}</h1>
+				<h1 class="title"  v-show="$route.name != 'articles'">{{title.name}}</h1>
 				<h5 class="subtitle">{{title.subscribe}}</h5>
 			</div>
 		</div>
@@ -34,7 +34,7 @@
 
 
 <script lang="ts">
-import { Component, Vue, Emit, Watch } from "vue-property-decorator";
+import { Component, Vue, Emit, Watch, Prop } from "vue-property-decorator";
 
 @Component
 export default class ClassName extends Vue {
@@ -42,6 +42,7 @@ export default class ClassName extends Vue {
 	private title:object = {};
 	private scrollTop:number = 0;
 	
+	@Prop() articleTitle !: string;
 	@Watch("$route") 
 	routeChange(val: any, oldVal: any) {
 		if (val.name == 'home') {
@@ -49,16 +50,28 @@ export default class ClassName extends Vue {
 				name: "Vincent's Blog",
 				subscribe: "学习弯道超车的技巧！"
 			}
+			document.title = "Vincent's Blog"
 		} else if (val.name == 'archives') {
 			this.title = {
 				name: "Archives"
 			}
+			document.title = "Archives | Vincent's Blog"
 		} else if (val.name == 'tags') {
 			this.title = {
 				name: "Tags"
 			}
+			document.title = "Tags | Vincent's Blog"
 		}
 	}
+
+	@Watch("articleTitle")
+	articleTitleChange(val: string, oldVal: string) {
+		this.title = {
+			name: val
+		}
+		document.title = val
+	}
+
 	@Emit("bindShowMenu") showMenuFun(isShow:boolean){};
 
 	mounted() {
@@ -76,4 +89,14 @@ export default class ClassName extends Vue {
 </script>
 
 
-<style lang="stylus" scope></style>
+<style lang="less">
+@media screen and (max-width: 760px) {
+	.title {
+		display: block!important;
+		font-size: 24px!important;
+		line-height: 1.5!important;
+	}
+}
+
+
+</style>

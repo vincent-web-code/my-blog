@@ -83,10 +83,7 @@ module.exports = {
   pluginOptions: {
     "style-resources-loader": {
       preProcessor: "less",
-    //   pattrens: ["D:\\workspace\\my-blod\\src\\styles\\variables.less"],
-      patterns: [
-          path.resolve(__dirname, "./src/styles/variables.less")
-      ]
+      patterns: []
     }
   }
 };
