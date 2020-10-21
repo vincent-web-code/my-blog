@@ -1,13 +1,12 @@
 <template>
-	<div class="container body-wrap">
-
+	<div class="container body-wrap" >
 		<div class="post-widget">
 			<div class="post-toc-wrap" :class="scrollTop > 100 ? 'fixed': ''">
 				<h4>TOC</h4>
 				<ol class="post-toc">
 					<!-- active -->
 					<li class="post-toc-item post-toc-level-2" :class="current == index ? 'active' : ''" v-for="(item, index) in TOCList" :key="index" @click="current = index">
-						<a class="post-toc-link" :href="`#${index+1}`">
+						<a class="post-toc-link" :href="`#id${index+1}`">
 							<span class="post-toc-number">{{index+1}}.</span>
 							<span class="post-toc-text">{{item}}</span>
 						</a>
@@ -75,7 +74,7 @@ export default class Article extends Vue{
 	private TOCList: Array<string> = [];
 	private screenWidth:any = '';   // 窗口宽度
 	private scrollTop:number = 0;  // 滚动距离顶部的位置
-	private current:any = '';
+	private current:any = 0;
 
 	@Emit('getTitle') getTitle(title:string) {}
 	@Emit("hideMenu") hideMenu(bool:boolean){};
@@ -96,20 +95,31 @@ export default class Article extends Vue{
 			})()
 		}
 		window.addEventListener('scroll', this.watchScroll)
+		
 	}
 
-	private getInitData() {
+	private async getInitData() {
 		this.hideMenu(false);
-		this.getArticle();  // 获取文章详情
+		await this.getArticle();  // 获取文章详情
+		
 		this.getClickNum(); // 获取阅读量
-		window.scroll(0,0)  // 返回顶部
+
+		if (window.location.hash) {
+			this.$nextTick(() => {
+				this.current = Number(window.location.hash.split('#id')[1]) - 1;
+				let height = (document.querySelectorAll(`#id${this.current + 1}`)[0] as any).offsetTop + 212 - 56;
+				window.scroll(0, height)
+			})
+		} else {
+			window.scroll(0,0)  // 返回顶部
+		}
 	}
+
 
 	private async getArticle() {
 		let res = await this.$http.get(`/article/${this.$route.query.id}`);
 		this.articleInfo = res;
 		let content = this.articleInfo.content;
-		// console.log(122, content)
 		// 获取toc
 		let TOCList = content.match(/<h2>(.*?)<\/h2>/g);
 		TOCList = TOCList.map((e:string) => {
@@ -122,9 +132,8 @@ export default class Article extends Vue{
 		let str = '';
 		let index = 1;
 		for (let i = 0; i < array.length; i++) {
-			// let index = i;
 			if (array[i].indexOf('</h2>') != -1) {
-				str = str + `<h2 id="${index + 1}">` + array[i];
+				str = str + `<h2 id="id${index + 1}">` + array[i];
 				index++
 			} else {
 				str = str + array[i];
@@ -132,7 +141,6 @@ export default class Article extends Vue{
 			}	
 		}
 		this.articleInfo.content = str;
-
 		this.getTitle(this.articleInfo.title);
 	}
 
@@ -150,7 +158,18 @@ export default class Article extends Vue{
 
 	// 监听用户滑动
 	watchScroll() {
+		let allHeigth:any[] = []
+		this.TOCList.forEach((e,index) => {
+			allHeigth.push((document.querySelectorAll(`#id${index + 1}`)[0] as any).offsetTop + 212 - 56)
+		})
 		this.scrollTop = document.documentElement.scrollTop || document.body.scrollTop;
+		allHeigth.forEach((e, index) => {
+			if (!allHeigth[index-1]) {
+				this.current = 0;
+			} else if (this.scrollTop >= e && allHeigth[index-1] < e) {
+				this.current = index
+			}
+		})
   	}
 
 }
